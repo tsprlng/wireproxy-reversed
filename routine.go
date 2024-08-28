@@ -149,17 +149,26 @@ func (config *Socks5Config) SpawnRoutine(vt *VirtualTun) {
 	}
 
 	options := []socks5.Option{
-		socks5.WithDial(vt.Tnet.DialContext),
-		socks5.WithResolver(vt),
+		//socks5.WithDial(vt.Tnet.DialContext),
+		//socks5.WithResolver(vt),
 		socks5.WithAuthMethods(authMethods),
 		socks5.WithBufferPool(bufferpool.NewPool(256 * 1024)),
 	}
 
 	server := socks5.NewServer(options...)
 
-	if err := server.ListenAndServe("tcp", config.BindAddress); err != nil {
+	addrport, err := netip.ParseAddrPort(config.BindAddress)
+	if err != nil {
 		log.Fatal(err)
 	}
+
+	listener, err := vt.Tnet.ListenTCPAddrPort(addrport)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Print("listening")
+	server.Serve(listener)
 }
 
 // SpawnRoutine spawns a http server.
