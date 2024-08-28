@@ -326,13 +326,13 @@ func ParsePeers(cfg *ini.File, peers *[]PeerConfig) error {
 			peer.PreSharedKey = value
 		}
 
-		if value, err := parseString(section, "Endpoint"); err == nil {
-			decoded, err = resolveIPPAndPort(strings.ToLower(value))
-			if err != nil {
-				return err
-			}
-			peer.Endpoint = &decoded
-		}
+		//if value, err := parseString(section, "Endpoint"); err == nil {
+		//	decoded, err = resolveIPPAndPort(strings.ToLower(value))
+		//	if err != nil {
+		//		return err
+		//	}
+		//	peer.Endpoint = &decoded
+		//}
 
 		if sectionKey, err := section.GetKey("PersistentKeepalive"); err == nil {
 			value, err := sectionKey.Int()
